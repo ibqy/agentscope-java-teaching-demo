@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentScope Java 教学指南</title>
+<style>
+  :root{--bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2b3140;--text:#e6e9f0;--muted:#9aa3b5;--accent:#00a4ff;--accent2:#7c6bff;--green:#34d399;--code:#0b0d12}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.7}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 22px 90px}
+  header.hero{background:linear-gradient(135deg,#0e2233 0%,#171a21 60%);border:1px solid var(--line);border-radius:18px;padding:44px 38px;margin-bottom:34px}
+  .tag{display:inline-block;background:rgba(0,164,255,.14);color:var(--accent);border:1px solid rgba(0,164,255,.35);padding:4px 12px;border-radius:999px;font-size:13px}
+  h1{font-size:32px;margin:16px 0 8px;font-weight:800}
+  .sub{color:var(--muted);font-size:15px}
+  h2{font-size:23px;margin:54px 0 4px;color:#fff;border-left:4px solid var(--accent);padding-left:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:16px 0}
+  .demo{display:grid;grid-template-columns:24px 1fr;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .demo b{font-size:16px;color:#fff}
+  .demo .muted{font-size:14px}
+  code{background:rgba(0,164,255,.1);color:#7fd4ff;padding:2px 6px;border-radius:5px;font-family:"JetBrains Mono",monospace;font-size:13px}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:11px;padding:16px 18px;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:13px}
+  footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <span class="tag">AGENTSCOPE FOR JAVA V2</span>
+  <h1>AgentScope Java 教学演示</h1>
+  <div class="sub">demo01 ~ demo11 渐进式教学 &middot; SDK 2.0.1 + Spring Boot 3.4.4 + Java 21</div>
+</header>
+
+<p>本工程用 <b>11 个循序渐进的 Demo</b> 带零基础读者上手 <b>AgentScope for Java v2</b>——阿里巴巴出品的面向智能体应用的企业级框架。核心概念是 <code>HarnessAgent</code>（入口智能体）+ <code>@Tool</code>（工具函数）+ <code>streamEvents</code>（流式事件）。默认使用通义千问(百炼 DashScope) API。</p>
+
+<h2>Demo 一览</h2>
+<div class="card">
+<div class="demo"><div class="num">01</div><div><b>HarnessAgent 初始化</b><br><span class="muted">HarnessAgent 构造与阻塞式对话，GET /api/demo01/hello</span></div></div>
+<div class="demo"><div class="num">02</div><div><b>显式 DashScopeChatModel 配置</b><br><span class="muted">Builder 式构建模型实例驱动 HarnessAgent</span></div></div>
+<div class="demo"><div class="num">03</div><div><b>阻塞式对话 call</b><br><span class="muted">agent.call() + .block() 同步等待返回</span></div></div>
+<div class="demo"><div class="num">04</div><div><b>流式事件 streamEvents</b><br><span class="muted">Flux&lt;AgentEvent&gt; 逐块读取 TextBlockDeltaEvent.getDelta()</span></div></div>
+<div class="demo"><div class="num">05</div><div><b>工具调用 @Tool</b><br><span class="muted">WeatherTools 自定义工具，智能体 ReAct 自动调用</span></div></div>
+<div class="demo"><div class="num">06</div><div><b>多智能体 subagent</b><br><span class="muted">主从结构：研究员 + 翻译官协作</span></div></div>
+<div class="demo"><div class="num">07</div><div><b>记忆/workspace/compaction</b><br><span class="muted">MemoryConfig + CompactionConfig 长期记忆管理</span></div></div>
+<div class="demo"><div class="num">08</div><div><b>结构化输出</b><br><span class="muted">call(msgs, Movie.class) 获取类型化 POJO</span></div></div>
+<div class="demo"><div class="num">09</div><div><b>提示词 / 系统提示</b><br><span class="muted">sysPrompt + SystemMessage 塑造智能体角色</span></div></div>
+<div class="demo"><div class="num">10</div><div><b>综合助手</b><br><span class="muted">计算器 + 备忘录工具集成的全能助理</span></div></div>
+<div class="demo"><div class="num">11</div><div><b>深阶·任务式工作助手</b><br><span class="muted">记忆+压缩+多工具+流式的长期任务工作助手</span></div></div>
+</div>
+
+<footer>AgentScope for Java 教学演示 &middot; 基于 agentscope 2.0.1 &middot; 用知识，让人工智能更好工程化</footer>
+</div>
+</body>
+</html>
