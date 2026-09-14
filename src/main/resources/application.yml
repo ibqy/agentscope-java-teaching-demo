@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: agentscope-java-teaching-demo
+
+agentscope:
+  api-key: ${DASHSCOPE_API_KEY:demo-placeholder}
+  model: dashscope:qwen-plus
+  dashscope-model: qwen-plus
