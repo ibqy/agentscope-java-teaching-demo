@@ -1,0 +1,18 @@
+# Maven 构建输出
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE 配置
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# AgentScope 运行时生成的工作区 / 记忆数据
+.agentscope/
+
+# 系统文件
+*.log
+.DS_Store
