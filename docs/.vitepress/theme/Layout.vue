@@ -18,8 +18,8 @@ const { Layout } = DefaultTheme
               <div class="as-b as-r">检索完成，正在流式撰写总结……（会话记忆保持上下文）</div>
             </div>
             <div class="as-agents">
-              <span class="as-agent">ReActAgent · 检索</span>
-              <span class="as-agent">ReActAgent · 撰写</span>
+              <span class="as-agent">HarnessAgent · 检索</span>
+              <span class="as-agent">HarnessAgent · 撰写</span>
             </div>
           </div>
           <div class="sg-chips">

@@ -16,7 +16,7 @@ hero:
 features:
   - icon: 👋
     title: Hello Agent
-    details: 最小可运行 Agent：模型配置、ReActAgent 创建、首次对话
+    details: 最小可运行 Agent：模型配置、HarnessAgent 创建、首次对话
   - icon: 🌊
     title: 流式与记忆
     details: 流式输出体验，MemoryConfig 会话记忆与 CompactionConfig 上下文压缩
@@ -31,7 +31,7 @@ features:
     details: Prompt 模板管理与强类型输出解析
   - icon: 📖
     title: 完整 HTML 教程
-    details: 图文版教学指南（GitHub 链接），配合文档站对照阅读
+    details: "[图文版教学指南](/agentscope-java-teaching-guide.html)，配合文档站对照阅读"
 ---
 
 

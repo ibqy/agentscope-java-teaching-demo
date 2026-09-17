@@ -35,7 +35,8 @@ export default defineConfig({
           { text: '02 · 流式与记忆', link: '/02-streaming-memory' },
           { text: '03 · 多智能体协作', link: '/03-multi-agent' },
           { text: '04 · 工具调用', link: '/04-tool-calling' },
-          { text: '05 · 结构化输出与模板', link: '/05-structured-prompt' }
+          { text: '05 · 结构化输出与模板', link: '/05-structured-prompt' },
+          { text: '06 · 综合实战', link: '/06-comprehensive-demo' }
         ]
       }
     ],
