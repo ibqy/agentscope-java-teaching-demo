@@ -83,6 +83,46 @@ Demo10 全能助理        →  多工具聚合 + maxIters
 Demo11 综合实战        →  全能力组合：任务+工具+记忆+流式
 ```
 
+## 实现边界
+
+### 已实现 ✅
+
+- 11 个渐进式 Demo 控制器，覆盖 AgentScope for Java 2.0.1 核心能力
+- HarnessAgent / DashScopeChatModel / SubagentDeclaration 完整构建链
+- 工具系统：`@Tool` 注解 + Toolkit 注册（天气、计算器、任务管理）
+- 流式输出：`streamEvents()` 增量事件处理
+- 结构化输出：目标类型反序列化
+- 记忆与工作区：MemoryConfig + CompactionConfig
+- 19 个单元测试（JUnit 5），覆盖工具类纯逻辑
+
+### 教学简化 ⚠️
+
+- **工具实现**：WeatherTools 返回模拟数据，不接入真实天气 API
+- **计算器**：使用 `ScriptEngineManager` JavaScript 引擎（JDK 15+ 已移除 Nashorn，仅作演示）
+- **任务管理**：TaskTools 使用内存 `ConcurrentHashMap` 存储，重启丢失
+- **多智能体**：Demo06 子智能体使用相同模型，未做角色差异化调优
+
+### 未实现 ❌
+
+- 持久化存储（数据库/文件）
+- 用户认证与权限控制
+- 生产级错误重试与熔断
+- 前端 UI 界面（仅提供 REST API）
+- AgentScope 的 RAG / 向量检索能力
+
+## 测试
+
+```bash
+mvn test    # 19 个单元测试，约 3 秒
+```
+
+| 测试类 | 数量 | 覆盖范围 |
+|--------|------|---------|
+| AgentScopeApplicationTests | 1 | 启动类冒烟测试 |
+| WeatherToolsTest | 3 | 天气工具默认/自定义单位、格式 |
+| AssistantToolsTest | 6 | 计算器（适配 JDK 21 无 Nashorn）+ 备忘 |
+| TaskToolsTest | 9 | 任务 CRUD、ID 自增、状态转换、错误处理 |
+
 ## 项目结构
 
 ```
