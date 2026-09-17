@@ -93,7 +93,9 @@ Demo11 综合实战        →  全能力组合：任务+工具+记忆+流式
 - 流式输出：`streamEvents()` 增量事件处理
 - 结构化输出：目标类型反序列化
 - 记忆与工作区：MemoryConfig + CompactionConfig
-- 19 个单元测试（JUnit 5），覆盖工具类纯逻辑
+- 全局异常处理：`@ControllerAdvice` + `ApiResponse` 统一响应包装
+- 参数校验：Jakarta Validation（`@NotBlank`）+ `@Valid` + JSON Body 端点
+- 25 个单元测试（JUnit 5），覆盖工具类纯逻辑 + 异常处理
 
 ### 教学简化 ⚠️
 
@@ -113,7 +115,7 @@ Demo11 综合实战        →  全能力组合：任务+工具+记忆+流式
 ## 测试
 
 ```bash
-mvn test    # 19 个单元测试，约 3 秒
+mvn test    # 25 个单元测试，约 3 秒
 ```
 
 | 测试类 | 数量 | 覆盖范围 |
@@ -122,6 +124,7 @@ mvn test    # 19 个单元测试，约 3 秒
 | WeatherToolsTest | 3 | 天气工具默认/自定义单位、格式 |
 | AssistantToolsTest | 6 | 计算器（适配 JDK 21 无 Nashorn）+ 备忘 |
 | TaskToolsTest | 9 | 任务 CRUD、ID 自增、状态转换、错误处理 |
+| GlobalExceptionHandlerTest | 6 | ApiResponse 包装、校验异常、缺参异常、未知异常 |
 
 ## 项目结构
 

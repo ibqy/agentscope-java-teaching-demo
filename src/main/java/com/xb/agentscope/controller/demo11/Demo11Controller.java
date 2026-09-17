@@ -11,8 +11,10 @@ import io.agentscope.core.tool.Toolkit;
 import io.agentscope.harness.agent.HarnessAgent;
 import io.agentscope.harness.agent.memory.MemoryConfig;
 import io.agentscope.harness.agent.memory.compaction.CompactionConfig;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +57,14 @@ public class Demo11Controller {
                        @RequestParam String instruction) {
         HarnessAgent assistant = assistantFor(session);
         Msg reply = assistant.call(List.of(new UserMessage(instruction)), RuntimeContext.empty()).block();
+        return reply != null ? reply.getTextContent() : "（无回复）";
+    }
+
+    @PostMapping("/execute")
+    public String execute(@Valid @RequestBody Demo11TaskRequest req) {
+        String sessionId = (req.session() == null || req.session().isBlank()) ? "default" : req.session();
+        HarnessAgent assistant = assistantFor(sessionId);
+        Msg reply = assistant.call(List.of(new UserMessage(req.instruction())), RuntimeContext.empty()).block();
         return reply != null ? reply.getTextContent() : "（无回复）";
     }
 
