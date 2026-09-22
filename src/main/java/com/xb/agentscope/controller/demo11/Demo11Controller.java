@@ -23,18 +23,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Demo11Controller - 综合任务助手（Full Task Assistant）示例控制器
+ *
+ * 融合工具调用、记忆、流式输出等所有能力，构建一个完整的任务型工作助手。
+ * 教学要点：多工具注册 + 记忆隔离 + 流式输出的综合集成模式。
+ *
+ * @author ibqy
+ */
 @RestController
 @RequestMapping("/api/demo11")
 public class Demo11Controller {
 
+    // 按 sessionId 缓存 Agent 实例，同一会话复用同一个 Agent 保持记忆连续
     private final Map<String, HarnessAgent> agentCache = new ConcurrentHashMap<>();
 
+    /**
+     * 获取或创建指定会话的 Agent 实例
+     *
+     * @param sessionId 会话 ID
+     * @return 对应会话的 HarnessAgent
+     */
     private HarnessAgent assistantFor(String sessionId) {
         return agentCache.computeIfAbsent(sessionId, this::buildAssistant);
     }
 
+    /**
+     * 构建一个集成了任务管理、天气查询、计算和备忘工具的记忆 Agent
+     *
+     * @param sessionId 会话 ID，用于隔离工作空间路径
+     * @return 配置完成的 HarnessAgent
+     */
     private HarnessAgent buildAssistant(String sessionId) {
         Toolkit toolkit = new Toolkit();
+        // 注册三类工具：任务管理、天气查询、计算备忘
         toolkit.registerTool(new TaskTools());
         toolkit.registerTool(new WeatherTools());
         toolkit.registerTool(new AssistantTools());
@@ -52,6 +74,13 @@ public class Demo11Controller {
                 .memory(memoryConfig).compaction(compactionConfig).build();
     }
 
+    /**
+     * 通过表单参数发送任务指令给 Agent
+     *
+     * @param session     会话 ID
+     * @param instruction 用户指令
+     * @return Agent 的文本回复
+     */
     @PostMapping("/task")
     public String task(@RequestParam(defaultValue = "demo") String session,
                        @RequestParam String instruction) {
@@ -60,6 +89,12 @@ public class Demo11Controller {
         return reply != null ? reply.getTextContent() : "（无回复）";
     }
 
+    /**
+     * 通过 JSON 请求体发送任务指令（支持 @Valid 校验）
+     *
+     * @param req 包含 session 和 instruction 的请求体
+     * @return Agent 的文本回复
+     */
     @PostMapping("/execute")
     public String execute(@Valid @RequestBody Demo11TaskRequest req) {
         String sessionId = (req.session() == null || req.session().isBlank()) ? "default" : req.session();
@@ -68,6 +103,13 @@ public class Demo11Controller {
         return reply != null ? reply.getTextContent() : "（无回复）";
     }
 
+    /**
+     * 以流式方式接收 Agent 的回复并拼接为完整文本
+     *
+     * @param session 会话 ID
+     * @param message 用户输入
+     * @return 包含事件条数和拼接结果的字符串
+     */
     @GetMapping("/stream")
     public String stream(@RequestParam(defaultValue = "demo") String session,
                          @RequestParam(defaultValue = "请帮我列出当前所有任务") String message) {

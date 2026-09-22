@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+/**
+ * Demo04StreamController - 流式输出（Streaming）示例控制器
+ *
+ * 演示 Agent 的流式事件订阅机制，通过 streamEvents() 逐块接收
+ * 模型生成的文本增量（TextBlockDeltaEvent），模拟"打字机效果"。
+ *
+ * @author ibqy
+ */
 @RestController
 @RequestMapping("/api/demo04")
 public class Demo04StreamController {
@@ -21,9 +29,16 @@ public class Demo04StreamController {
         this.assistantAgent = assistantAgent;
     }
 
+    /**
+     * 流式接收 Agent 的事件增量并拼接为完整文本
+     *
+     * @param message 用户输入的消息
+     * @return 包含事件条数和拼接后完整文本的结果
+     */
     @GetMapping("/stream")
     public String stream(@RequestParam(defaultValue = "请用三句话介绍 DashScope") String message) {
         StringBuilder collected = new StringBuilder();
+        // streamEvents 返回响应式事件流，doOnNext 逐条处理增量文本事件
         List<AgentEvent> events = assistantAgent.streamEvents(
                         new UserMessage(message), RuntimeContext.empty())
                 .doOnNext(event -> {

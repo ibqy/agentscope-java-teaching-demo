@@ -12,14 +12,30 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.file.Paths;
 import java.util.List;
 
+/**
+ * Demo09PromptController - 角色切换（Persona / Prompt Engineering）示例控制器
+ *
+ * 演示通过改变系统提示词（sysPrompt）让同一个 Agent 框架扮演不同角色，
+ * 教学要点：系统提示词对模型行为的引导作用和 Prompt Engineering 基础。
+ *
+ * @author ibqy
+ */
 @RestController
 @RequestMapping("/api/demo09")
 public class Demo09PromptController {
 
+    /**
+     * 根据角色参数切换系统提示词，让 Agent 扮演不同的专业身份
+     *
+     * @param persona 角色标识（teacher / tour_guide / code_reviewer）
+     * @param message 用户输入内容
+     * @return Agent 在对应角色下的回复文本
+     */
     @GetMapping("/persona")
     public String persona(
             @RequestParam(defaultValue = "teacher") String persona,
             @RequestParam(defaultValue = "解释什么是大模型") String message) {
+        // 用 switch 表达式按角色映射不同的系统提示词，实现"一人多角"
         String sysPrompt = switch (persona) {
             case "tour_guide" -> "你是一位热情的旅游导游，回答要生动有趣，并给出实用的小贴士。";
             case "code_reviewer" -> "你是一位资深代码评审专家，回答严谨，专注于可读性、规范与潜在缺陷。";

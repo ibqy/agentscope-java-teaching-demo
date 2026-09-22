@@ -6,6 +6,8 @@ package com.xb.agentscope.common;
  * <p>作者：ibqy | 日期：2026-09-17</p>
  *
  * <p><b>实战价值</b>：前端只需一种解析方式。成功 code=0，失败 code 为业务错误码。</p>
+ *
+ * @author ibqy
  */
 public record ApiResponse<T>(
         int code,

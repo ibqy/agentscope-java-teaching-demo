@@ -17,14 +17,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Demo07MemoryWorkspaceController - 记忆与工作空间持久化示例
+ *
+ * 演示 Agent 的记忆机制：通过 MemoryConfig 和 CompactionConfig 配置
+ * 对话记忆的存储与压缩策略，不同会话名称的 Agent 各自保持独立记忆。
+ *
+ * @author ibqy
+ */
 @RestController
 @RequestMapping("/api/demo07")
 public class Demo07MemoryWorkspaceController {
 
+    // 按用户名称缓存 Agent 实例，同一 name 的对话共享历史记忆
     private final Map<String, HarnessAgent> agentCache = new ConcurrentHashMap<>();
 
+    /**
+     * 与具有记忆能力的 Agent 进行对话
+     *
+     * @param name 会话名称，相同名称共享记忆
+     * @param text 用户输入内容
+     * @return Agent 的回复
+     */
     @GetMapping("/memory")
     public String memory(@RequestParam String name, @RequestParam String text) {
+        // computeIfAbsent：首次请求时创建 Agent，后续复用同一实例保持记忆连续
         HarnessAgent agent = agentCache.computeIfAbsent(name, k -> buildMemoryAgent(k));
         List<Msg> messages = new ArrayList<>();
         messages.add(new SystemMessage("你拥有记忆能力，请记住用户在本会话中提到过的关键信息，并在被问及时回忆出来。"));
@@ -33,6 +50,12 @@ public class Demo07MemoryWorkspaceController {
         return reply != null ? reply.getTextContent() : "（无回复）";
     }
 
+    /**
+     * 构建具有记忆功能的 Agent
+     *
+     * @param name 用于生成独立工作空间路径，实现持久化隔离
+     * @return 配置完成的记忆 Agent
+     */
     private HarnessAgent buildMemoryAgent(String name) {
         MemoryConfig memoryConfig = MemoryConfig.builder().model("dashscope:qwen-plus").build();
         CompactionConfig compactionConfig = CompactionConfig.builder()

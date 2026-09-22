@@ -3,9 +3,11 @@ package com.xb.agentscope.controller.demo11;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * demo11 任务指令请求体
+ * Demo11TaskRequest - 任务指令请求体（JSON 格式）
  *
- * <p>作者：ibqy | 日期：2026-09-17</p>
+ * 用于 /api/demo11/execute 接口，演示 @NotBlank 参数校验与 record 类的结合使用。
+ *
+ * @author ibqy
  */
 public record Demo11TaskRequest(
         String session,
