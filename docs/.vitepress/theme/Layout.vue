@@ -27,8 +27,10 @@ const { Layout } = DefaultTheme
             <span class="sg-chip">会话记忆 · 上下文压缩</span>
             <span class="sg-chip">Toolkit 工具调用</span>
             <span class="sg-chip">结构化输出</span>
+            <span class="sg-chip">MCP 工具生态</span>
+            <span class="sg-chip">A2A 跨智能体通信</span>
           </div>
-          <p class="sig-note">从 Hello Agent 到 Director 编排，五个渐进式示例——先让一个 Agent 说上话，再让一群 Agent 分工合作。</p>
+          <p class="sig-note">从 Hello Agent 到 MCP/A2A，十三个渐进式示例——先让一个 Agent 说上话，再让一群 Agent 分工合作，最后接入标准协议生态。</p>
         </div>
       </section>
     </template>

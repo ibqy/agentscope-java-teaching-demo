@@ -1,6 +1,6 @@
 # AgentScope for Java 教学演示
 
-基于 [AgentScope for Java v2](https://github.com/agentscope-ai/agentscope-java) 构建的教学演示项目，通过 11 个渐进式 Demo 帮助初学者快速掌握 AgentScope 的核心概念与实战技巧。
+基于 [AgentScope for Java v2](https://github.com/agentscope-ai/agentscope-java) 构建的教学演示项目，通过 13 个渐进式 Demo 帮助初学者快速掌握 AgentScope 的核心概念与实战技巧。
 
 ## 技术栈
 
@@ -26,6 +26,8 @@
 | Demo09 | Prompt 模板 | 动态 System Prompt、角色切换（老师/导游/评审） | `/api/demo09/persona` |
 | Demo10 | 全能助理 | 多工具聚合（计算器+备忘）、maxIters 控制 | `/api/demo10/assistant` |
 | Demo11 | 综合实战 | 任务管理+天气+计算+记忆+流式输出全组合 | `/api/demo11/task` + `/api/demo11/stream` |
+| Demo12 | MCP 工具集成 | McpClientBuilder、StdIO/SSE 传输、MCP 工具自动发现与注册 | `/api/demo12/filesystem` + `/api/demo12/sse` |
+| Demo13 | A2A 跨智能体通信 | A2aAgent、WellKnownAgentCardResolver、AgentCard 自动发现 | `/api/demo13/call` + `/api/demo13/auth` |
 
 ## 快速启动
 
@@ -81,15 +83,21 @@ Demo09 Prompt 模板     →  动态 System Prompt 角色工程
 Demo10 全能助理        →  多工具聚合 + maxIters
     ↓
 Demo11 综合实战        →  全能力组合：任务+工具+记忆+流式
+    ↓
+Demo12 MCP 工具集成     →  标准协议接入外部工具生态
+    ↓
+Demo13 A2A 跨智能体通信  →  AgentCard 发现 + 远程 Agent 调用
 ```
 
 ## 实现边界
 
 ### 已实现 ✅
 
-- 11 个渐进式 Demo 控制器，覆盖 AgentScope for Java 2.0.1 核心能力
+- 13 个渐进式 Demo 控制器，覆盖 AgentScope for Java 2.0.1 核心能力
 - HarnessAgent / DashScopeChatModel / SubagentDeclaration 完整构建链
 - 工具系统：`@Tool` 注解 + Toolkit 注册（天气、计算器、任务管理）
+- MCP 工具集成：McpClientBuilder + StdIO/SSE 传输，接入标准协议工具生态
+- A2A 跨智能体通信：A2aAgent + WellKnownAgentCardResolver，远程 Agent 发现与调用
 - 流式输出：`streamEvents()` 增量事件处理
 - 结构化输出：目标类型反序列化
 - 记忆与工作区：MemoryConfig + CompactionConfig
@@ -138,7 +146,10 @@ agentscope-java-teaching-demo/
 │   ├── 02-streaming-memory.md                    # 流式输出与长期记忆
 │   ├── 03-multi-agent.md                         # 多智能体协作
 │   ├── 04-tool-calling.md                        # 工具注册与使用
-│   └── 05-structured-prompt.md                   # 结构化输出与Prompt模板
+│   ├── 05-structured-prompt.md                   # 结构化输出与Prompt模板
+│   ├── 06-comprehensive-demo.md                  # 综合实战：任务型工作助手
+│   ├── 07-mcp-integration.md                     # MCP 工具集成
+│   └── 08-a2a-communication.md                   # A2A 跨智能体通信
 └── src/main/
     ├── java/com/xb/agentscope/
     │   ├── AgentScopeJavaTeachingDemoApplication.java  # 启动类
@@ -155,7 +166,9 @@ agentscope-java-teaching-demo/
     │       ├── demo08/  Demo08StructuredOutputController.java / Movie.java
     │       ├── demo09/  Demo09PromptController.java
     │       ├── demo10/  Demo10AssistantController.java / AssistantTools.java
-    │       └── demo11/  Demo11Controller.java / TaskTools.java
+    │       ├── demo11/  Demo11Controller.java / TaskTools.java
+    │       ├── demo12/  Demo12Controller.java
+    │       └── demo13/  Demo13Controller.java
     └── resources/
         └── application.yml                      # 配置：端口/DashScope API Key
 ```

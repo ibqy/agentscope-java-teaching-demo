@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,10 +48,10 @@ public class Demo13Controller {
             @RequestParam(defaultValue = "http://localhost:9090") String remoteUrl,
             @RequestParam(defaultValue = "你好，请做个自我介绍") String message) {
         // Step 1: 创建 WellKnown 解析器，自动发现远程 Agent 的 AgentCard
-        WellKnownAgentCardResolver resolver = new WellKnownAgentCardResolver(
-                remoteUrl,
-                "/.well-known/agent-card.json",
-                Map.of());
+        WellKnownAgentCardResolver resolver = WellKnownAgentCardResolver.builder()
+                .baseUrl(remoteUrl)
+                .relativeCardPath("/.well-known/agent-card.json")
+                .build();
 
         // Step 2: 构建 A2A Agent —— 远程 A2A 服务的本地代理
         A2aAgent agent = A2aAgent.builder()
@@ -60,7 +61,7 @@ public class Demo13Controller {
 
         // Step 3: 像调用本地 Agent 一样调用远程 Agent
         try {
-            Msg response = agent.call(new UserMessage(message)).block();
+            Msg response = agent.call(List.of(new UserMessage(message))).block();
             return response != null ? response.getTextContent() : "（无回复）";
         } catch (Exception e) {
             return "A2A 调用失败（请确认远程 A2A 服务已启动）：" + e.getMessage();
@@ -84,10 +85,11 @@ public class Demo13Controller {
             @RequestParam(defaultValue = "demo-token") String token,
             @RequestParam(defaultValue = "你好") String message) {
         // 携带认证请求头的 WellKnown 解析器
-        WellKnownAgentCardResolver resolver = new WellKnownAgentCardResolver(
-                remoteUrl,
-                "/.well-known/agent-card.json",
-                Map.of("Authorization", "Bearer " + token));
+        WellKnownAgentCardResolver resolver = WellKnownAgentCardResolver.builder()
+                .baseUrl(remoteUrl)
+                .relativeCardPath("/.well-known/agent-card.json")
+                .authHeaders(Map.of("Authorization", "Bearer " + token))
+                .build();
 
         A2aAgent agent = A2aAgent.builder()
                 .name("auth-caller")
@@ -95,7 +97,7 @@ public class Demo13Controller {
                 .build();
 
         try {
-            Msg response = agent.call(new UserMessage(message)).block();
+            Msg response = agent.call(List.of(new UserMessage(message))).block();
             return response != null ? response.getTextContent() : "（无回复）";
         } catch (Exception e) {
             return "A2A 认证调用失败：" + e.getMessage();

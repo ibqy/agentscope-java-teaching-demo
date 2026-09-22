@@ -36,7 +36,9 @@ export default defineConfig({
           { text: '03 · 多智能体协作', link: '/03-multi-agent' },
           { text: '04 · 工具调用', link: '/04-tool-calling' },
           { text: '05 · 结构化输出与模板', link: '/05-structured-prompt' },
-          { text: '06 · 综合实战', link: '/06-comprehensive-demo' }
+          { text: '06 · 综合实战', link: '/06-comprehensive-demo' },
+          { text: '07 · MCP 工具集成', link: '/07-mcp-integration' },
+          { text: '08 · A2A 跨智能体通信', link: '/08-a2a-communication' }
         ]
       }
     ],
