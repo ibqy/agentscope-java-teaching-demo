@@ -1,13 +1,13 @@
 # AgentScope for Java 教学演示
 
-基于 [AgentScope for Java v2](https://github.com/agentscope-ai/agentscope-java) 构建的教学演示项目，通过 13 个渐进式 Demo 帮助初学者快速掌握 AgentScope 的核心概念与实战技巧。
+基于 [AgentScope for Java v2](https://github.com/agentscope-ai/agentscope-java) 构建的教学演示项目，通过 15 个渐进式 Demo 帮助初学者快速掌握 AgentScope 的核心概念与实战技巧。
 
 ## 技术栈
 
 | 组件 | 版本 |
 |------|------|
-| Spring Boot | 3.4.4 |
-| AgentScope for Java | 2.0.1 |
+| Spring Boot | 3.5.16 |
+| AgentScope for Java | 2.0.4 |
 | Java | 21 |
 | 模型 | DashScope (qwen-plus) |
 
@@ -28,6 +28,8 @@
 | Demo11 | 综合实战 | 任务管理+天气+计算+记忆+流式输出全组合 | `/api/demo11/task` + `/api/demo11/stream` |
 | Demo12 | MCP 工具集成 | McpClientBuilder、StdIO/SSE 传输、MCP 工具自动发现与注册 | `/api/demo12/filesystem` + `/api/demo12/sse` |
 | Demo13 | A2A 跨智能体通信 | A2aAgent、WellKnownAgentCardResolver、AgentCard 自动发现 | `/api/demo13/call` + `/api/demo13/auth` |
+| Demo15 | Plan Mode 与权限系统 | 先规划后执行、工具权限规则（ALLOW/DENY/ASK）、RuntimeContext 多用户隔离、AgentState 持久化 | `/api/demo15/plan` + `/api/demo15/permission` + `/api/demo15/multi-user` + `/api/demo15/state` |
+| Demo16 | 事件驱动可观测 | streamEvents 全事件订阅：执行时间线 + 真实 Token 用量统计 | `/api/demo16/timeline` + `/api/demo16/usage` |
 
 ## 快速启动
 
@@ -87,13 +89,20 @@ Demo11 综合实战        →  全能力组合：任务+工具+记忆+流式
 Demo12 MCP 工具集成     →  标准协议接入外部工具生态
     ↓
 Demo13 A2A 跨智能体通信  →  AgentCard 发现 + 远程 Agent 调用
+    ↓
+Demo15 Plan Mode 与权限  →  先规划后执行 + 工具权限 + 会话隔离 + 状态持久化
+    ↓
+Demo16 事件驱动可观测    →  全事件订阅：执行时间线 + 真实 Token 计量
 ```
+
+> 说明：编号从 13 跳到 15 是因为 demo14 规划为 RAG 专题（见"未实现"清单），
+> 生产化能力（Plan Mode/权限/可观测）按 15、16 先行落地。
 
 ## 实现边界
 
 ### 已实现 ✅
 
-- 13 个渐进式 Demo 控制器，覆盖 AgentScope for Java 2.0.1 核心能力
+- 15 个渐进式 Demo 控制器，覆盖 AgentScope for Java 2.0 核心能力
 - HarnessAgent / DashScopeChatModel / SubagentDeclaration 完整构建链
 - 工具系统：`@Tool` 注解 + Toolkit 注册（天气、计算器、任务管理）
 - MCP 工具集成：McpClientBuilder + StdIO/SSE 传输，接入标准协议工具生态
@@ -101,9 +110,11 @@ Demo13 A2A 跨智能体通信  →  AgentCard 发现 + 远程 Agent 调用
 - 流式输出：`streamEvents()` 增量事件处理
 - 结构化输出：目标类型反序列化
 - 记忆与工作区：MemoryConfig + CompactionConfig
+- Plan Mode + 权限系统（demo15）：先规划后执行、工具级 ALLOW/DENY/ASK 规则、RuntimeContext 多用户隔离、AgentState 文件持久化
+- 事件驱动可观测（demo16）：全事件类型订阅、执行时间线聚合、ModelCallEndEvent 真实 Token 计量
 - 全局异常处理：`@ControllerAdvice` + `ApiResponse` 统一响应包装
 - 参数校验：Jakarta Validation（`@NotBlank`）+ `@Valid` + JSON Body 端点
-- 25 个单元测试（JUnit 5），覆盖工具类纯逻辑 + 异常处理
+- 34 个单元测试（JUnit 5），覆盖工具类纯逻辑 + 事件聚合逻辑 + 异常处理
 
 ### 教学简化 ⚠️
 
@@ -123,7 +134,7 @@ Demo13 A2A 跨智能体通信  →  AgentCard 发现 + 远程 Agent 调用
 ## 测试
 
 ```bash
-mvn test    # 25 个单元测试，约 3 秒
+mvn test    # 34 个单元测试，约 3 秒
 ```
 
 | 测试类 | 数量 | 覆盖范围 |
@@ -133,6 +144,7 @@ mvn test    # 25 个单元测试，约 3 秒
 | AssistantToolsTest | 6 | 计算器（适配 JDK 21 无 Nashorn）+ 备忘 |
 | TaskToolsTest | 9 | 任务 CRUD、ID 自增、状态转换、错误处理 |
 | GlobalExceptionHandlerTest | 6 | ApiResponse 包装、校验异常、缺参异常、未知异常 |
+| AgentEventTimelineTest | 9 | 事件分类计数、Token 用量累计、增量只计数不入表、null 容错、超迭代标记 |
 
 ## 项目结构
 
@@ -149,7 +161,9 @@ agentscope-java-teaching-demo/
 │   ├── 05-structured-prompt.md                   # 结构化输出与Prompt模板
 │   ├── 06-comprehensive-demo.md                  # 综合实战：任务型工作助手
 │   ├── 07-mcp-integration.md                     # MCP 工具集成
-│   └── 08-a2a-communication.md                   # A2A 跨智能体通信
+│   ├── 08-a2a-communication.md                   # A2A 跨智能体通信
+│   ├── 09-plan-mode-permission.md                # Plan Mode 与权限系统（demo15）
+│   └── 10-event-observability.md                 # 事件驱动可观测（demo16）
 └── src/main/
     ├── java/com/xb/agentscope/
     │   ├── AgentScopeJavaTeachingDemoApplication.java  # 启动类
@@ -168,7 +182,9 @@ agentscope-java-teaching-demo/
     │       ├── demo10/  Demo10AssistantController.java / AssistantTools.java
     │       ├── demo11/  Demo11Controller.java / TaskTools.java
     │       ├── demo12/  Demo12Controller.java
-    │       └── demo13/  Demo13Controller.java
+    │       ├── demo13/  Demo13Controller.java
+    │       ├── demo15/  Demo15Controller.java
+    │       └── demo16/  Demo16EventObservabilityController.java / AgentEventTimeline.java
     └── resources/
         └── application.yml                      # 配置：端口/DashScope API Key
 ```

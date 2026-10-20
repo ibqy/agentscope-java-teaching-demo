@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.13</version>
+        <version>3.5.16</version>
         <relativePath/>
     </parent>
 
@@ -15,11 +15,11 @@
     <artifactId>agentscope-java-teaching-demo</artifactId>
     <version>1.0.0</version>
     <name>agentscope-java-teaching-demo</name>
-    <description>AgentScope for Java v2 (2.0.1) 教学工程</description>
+    <description>AgentScope for Java v2 (2.0.4) 教学工程</description>
 
     <properties>
         <java.version>21</java.version>
-        <agentscope.version>2.0.3</agentscope.version>
+        <agentscope.version>2.0.4</agentscope.version>
     </properties>
 
     <dependencies>

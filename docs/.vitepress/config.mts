@@ -39,7 +39,8 @@ export default defineConfig({
           { text: '06 · 综合实战', link: '/06-comprehensive-demo' },
           { text: '07 · MCP 工具集成', link: '/07-mcp-integration' },
           { text: '08 · A2A 跨智能体通信', link: '/08-a2a-communication' },
-          { text: '09 · Plan Mode 与权限系统', link: '/09-plan-mode-permission' }
+          { text: '09 · Plan Mode 与权限系统', link: '/09-plan-mode-permission' },
+          { text: '10 · 事件驱动可观测', link: '/10-event-observability' }
         ]
       }
     ],
