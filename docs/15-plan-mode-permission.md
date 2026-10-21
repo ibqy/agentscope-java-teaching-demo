@@ -1,5 +1,9 @@
 # Demo15：Plan Mode 与权限系统 — 从"能用"到"可生产部署"
 
+> **导航**：[← 上一篇：Demo14 RAG 知识库检索](./14-rag-knowledge-base.md) · [返回首页](./index.md) · [下一篇：Demo16 事件驱动可观测 →](./16-event-observability.md)
+>
+> **本章源码**：[Demo15Controller](../src/main/java/com/xb/agentscope/controller/demo15/Demo15Controller.java)
+
 ## 知识点
 
 - Plan Mode：Agent 先规划再执行，适合复杂多步骤任务

@@ -1,5 +1,9 @@
 # Demo13：A2A 跨智能体通信 — 让 Agent 互相调用
 
+> **导航**：[← 上一篇：Demo12 MCP 工具集成](./12-mcp-integration.md) · [返回首页](./index.md) · [下一篇：Demo14 RAG 知识库检索 →](./14-rag-knowledge-base.md)
+>
+> **本章源码**：[Demo13Controller](../src/main/java/com/xb/agentscope/controller/demo13/Demo13Controller.java)
+
 ## 知识点
 
 - A2A（Agent-to-Agent）协议概念与核心价值
@@ -36,11 +40,11 @@ A2A 客户端需要额外引入依赖（MCP 不需要）：
 <dependency>
     <groupId>io.agentscope</groupId>
     <artifactId>agentscope-extensions-a2a-client</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.4</version>
 </dependency>
 ```
 
-> **注意**：不要引入 `agentscope-a2a-spring-boot-starter`，它会拉取 Spring Boot 4.x，与项目的 Spring Boot 3.4.4 冲突。
+> **注意**：不要引入 `agentscope-a2a-spring-boot-starter`，它会拉取 Spring Boot 4.x，与项目的 Spring Boot 3.5.x 冲突。
 
 ## WellKnown 路径发现
 

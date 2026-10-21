@@ -1,5 +1,9 @@
 # Demo16：事件驱动可观测 — 看懂 Agent 的每一步
 
+> **导航**：[← 上一篇：Demo15 Plan Mode 与权限系统](./15-plan-mode-permission.md) · [返回首页](./index.md) · [下一篇：附录 · 生产化改造清单 →](./appendix-production-hardening.md)
+>
+> **本章源码**：[Demo16EventObservabilityController](../src/main/java/com/xb/agentscope/controller/demo16/Demo16EventObservabilityController.java) · [AgentEventTimeline](../src/main/java/com/xb/agentscope/controller/demo16/AgentEventTimeline.java)
+
 ## 知识点
 
 - `streamEvents()` 的**全事件类型**订阅（不止文本增量）
@@ -79,6 +83,13 @@ Token: 输入 120 / 输出 35 / 合计 155，模型累计耗时 0.80s
 | 进程内聚合 | 按 sessionId/taskId 分桶，落 ClickHouse |
 | 单次请求视角 | 跨请求聚合：按用户/按天统计 Token 成本 |
 | `EXCEED_MAX_ITERS` 只记录 | 触发告警 + 自动熔断该用户的请求 |
+
+## 小结
+
+- `streamEvents()` 是全事件入口：文本增量面向体验，模型/工具/迭代事件面向生产
+- 用 `AgentEventTimeline` 分类聚合，避免把 token 级碎片直接打印
+- Token 用量以 `ModelCallEndEvent.getUsage()` 为准，是成本核算与预算告警的基线
+- 聚合逻辑与框架、Spring 解耦，可离线单测；上线前再接入指标、日志与追踪（见[附录](./appendix-production-hardening.md)）
 
 ## 相关
 

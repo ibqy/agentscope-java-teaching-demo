@@ -1,5 +1,9 @@
 # Demo12：MCP 工具集成 — 接入标准协议工具生态
 
+> **导航**：[← 上一篇：Demo11 综合实战](./11-comprehensive-demo.md) · [返回首页](./index.md) · [下一篇：Demo13 A2A 跨智能体通信 →](./13-a2a-communication.md)
+>
+> **本章源码**：[Demo12Controller](../src/main/java/com/xb/agentscope/controller/demo12/Demo12Controller.java)
+
 ## 知识点
 
 - MCP（Model Context Protocol）协议概念与三种传输方式

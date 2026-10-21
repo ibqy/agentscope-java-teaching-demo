@@ -1,11 +1,15 @@
-# Demo05 / Demo10：工具调用
+# Demo05：工具调用 — @Tool 与 Toolkit
+
+> **导航**：[← 上一篇：Demo04 流式输出](./04-streaming.md) · [返回首页](./index.md) · [下一篇：Demo06 多智能体协作 →](./06-multi-agent.md)
+>
+> **本章源码**：[Demo05ToolCallingController](../src/main/java/com/xb/agentscope/controller/demo05/Demo05ToolCallingController.java) · [WeatherTools](../src/main/java/com/xb/agentscope/controller/demo05/WeatherTools.java)
 
 ## 知识点
 
 - `@Tool` / `@ToolParam` 注解定义工具函数
 - `Toolkit` 工具集注册
 - 工具调用生命周期
-- 多工具聚合
+- `maxIters` 限制工具调用轮次
 
 ## 定义工具函数
 
@@ -29,6 +33,8 @@ public class WeatherTools {
 |------|------|---------|
 | `@Tool` | 标记方法为可调用工具 | `name`：工具名（LLM 看到的函数名）<br>`description`：功能描述 |
 | `@ToolParam` | 标记参数 | `name`：参数名<br>`description`：参数说明<br>`required`：是否必填 |
+
+> `description` 不是注释，而是模型选择工具的依据——写得越清楚，Agent 选得越准。
 
 ## 注册工具
 
@@ -60,30 +66,6 @@ HarnessAgent agent = HarnessAgent.builder()
 
 `maxIters` 限制 Agent 在单次对话中调用工具的最大轮次，防止死循环。
 
-## 多工具聚合 — Demo10
-
-Demo10 展示了将多个工具注册到同一个 Agent：
-
-```java
-Toolkit toolkit = new Toolkit();
-toolkit.registerTool(new AssistantTools());
-
-HarnessAgent assistant = HarnessAgent.builder()
-    .name("all-in-one-assistant")
-    .sysPrompt("你是一个集聊天、计算、备忘于一体的智能助理，善用工具辅助回答。")
-    .model("dashscope:qwen-plus")
-    .toolkit(toolkit)
-    .maxIters(5)
-    .workspace(Paths.get(".agentscope/workspace-demo10"))
-    .build();
-```
-
-`AssistantTools` 包含两个工具：
-- `calculator` — 计算四则运算表达式
-- `save_note` — 保存备忘信息
-
-Agent 会根据用户问题自动选择最合适的工具。
-
 ## 全局共享 Toolkit
 
 在 `AgentScopeJavaConfig` 中，工具也被注册为全局 Bean：
@@ -96,6 +78,14 @@ public Toolkit sharedToolkit() {
     toolkit.registerTool(new AssistantTools());
     return toolkit;
 }
+```
+
+全局 Toolkit 适合跨 Demo 复用的工具；局部 Toolkit 适合只服务单个场景的工具，二者按需选择。
+
+## 接口调用
+
+```bash
+curl "http://localhost:8080/api/demo05/weather?city=北京&prompt=请查一下这个城市的天气"
 ```
 
 ## 小结

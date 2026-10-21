@@ -1,5 +1,9 @@
 # Demo11：综合实战 — 任务型工作助手
 
+> **导航**：[← 上一篇：Demo10 全能助理](./10-assistant.md) · [返回首页](./index.md) · [下一篇：Demo12 MCP 工具集成 →](./12-mcp-integration.md)
+>
+> **本章源码**：[Demo11Controller](../src/main/java/com/xb/agentscope/controller/demo11/Demo11Controller.java) · [TaskTools](../src/main/java/com/xb/agentscope/controller/demo11/TaskTools.java) · [Demo11TaskRequest](../src/main/java/com/xb/agentscope/controller/demo11/Demo11TaskRequest.java)
+
 ## 知识点
 
 - 多工具聚合（跨 Demo 复用 `WeatherTools`、`AssistantTools`、新增 `TaskTools`）
@@ -39,7 +43,7 @@ toolkit.registerTool(new AssistantTools());  // 复用 Demo10：计算器 + 备�
 
 ## 记忆与压缩配置
 
-Demo11 首次引入 `MemoryConfig` 和 `CompactionConfig`，让 Agent 具备长期记忆能力：
+Demo11 复用 Demo07 的 `MemoryConfig` 和 `CompactionConfig` 方案，让 Agent 具备长期记忆能力：
 
 ```java
 MemoryConfig memoryConfig = MemoryConfig.builder()
@@ -156,19 +160,49 @@ public String stream(@RequestParam(defaultValue = "demo") String session,
 
 `streamEvents` 返回 `AgentEvent` 流，其中 `TextBlockDeltaEvent` 携带增量文本片段。逐块 `append` 即可还原完整回复——这正是前端打字机效果的底层原理。
 
+## 工程化配套：统一响应与异常处理
+
+前面 10 个 Demo 大多直接返回文本，方便用 curl 观察 Agent 的原始输出。但真实服务需要统一的错误契约，项目在 `common` 包中提供了这套基础设施（由 Spring Boot 自动生效）：
+
+| 组件 | 源码 | 作用 |
+|------|------|------|
+| `ApiResponse<T>` | [ApiResponse](../src/main/java/com/xb/agentscope/common/ApiResponse.java) | 统一 `{ code, message, data }` 结构，成功时 `code=0` |
+| `GlobalExceptionHandler` | [GlobalExceptionHandler](../src/main/java/com/xb/agentscope/common/GlobalExceptionHandler.java) | `@RestControllerAdvice` 分类处理参数缺失、校验失败、业务异常与未知异常 |
+| `Demo11TaskRequest` | [Demo11TaskRequest](../src/main/java/com/xb/agentscope/controller/demo11/Demo11TaskRequest.java) | `record` + `@NotBlank`，配合 `@Valid` 校验 JSON 请求体 |
+
+异常分类与 HTTP 状态码：
+
+| 异常场景 | HTTP 状态 | 响应 message |
+|---------|----------|-------------|
+| 缺少请求参数 | 400 | `缺少必要参数: instruction` |
+| `@Valid` 校验失败 | 400 | `instruction: instruction 不能为空` |
+| 业务 `IllegalArgumentException` | 400 | 异常消息 |
+| 未知异常 | 500 | `服务内部错误，requestId=xxxxxxxx` |
+
+验证方式：
+
+```bash
+curl -X POST http://localhost:8080/api/demo11/execute \
+  -H "Content-Type: application/json" \
+  -d '{"instruction": ""}'
+# {"code":400,"message":"instruction: instruction 不能为空","data":null}
+```
+
+未知异常会生成 8 位 `requestId` 并写入 error 日志，便于把用户反馈与后端堆栈对应起来。这套“统一响应 + 参数校验 + 兜底异常”的组合，是 Agent 服务对外提供 API 时的最小工程化基线；更完整的生产化改造见[附录](./appendix-production-hardening.md)。
+
 ## 能力回顾
 
-Demo11 综合了前序 Demo 的全部知识点：
+Demo11 按需复用了前序 Demo 的能力，而不是机械堆砌：
 
-| 知识领域 | 来源 Demo | Demo11 中的体现 |
+| 知识领域 | 来源 Demo | Demo11 中的实际体现 |
 |---------|-----------|----------------|
 | 基础 Agent 构建 | Demo01-03 | HarnessAgent builder 链式构建 |
 | 流式输出 | Demo04 | `streamEvents` + `TextBlockDeltaEvent` |
 | 工具调用 | Demo05、Demo10 | 复用 WeatherTools、AssistantTools |
-| 多智能体 | Demo06 | 系统提示引导 Agent 自主选择工具 |
-| 结构化输出 | Demo08 | TaskTools 返回结构化任务信息 |
-| 动态 Prompt | Demo09 | 系统提示动态拼接工具说明 |
-| 记忆与压缩 | —（新引入） | MemoryConfig + CompactionConfig |
+| 记忆与压缩 | Demo07 | MemoryConfig + CompactionConfig |
+| 提示设计 | Demo09 | 系统提示明确列出工具名与职责边界 |
+| 结构化请求体 | Demo08、Demo11 | `record` + `@Valid` 接收 JSON；TaskTools 返回格式化文本 |
+| 会话隔离 | Demo15（预习） | 按 sessionId 缓存 Agent 与 workspace，提前用到后续章节的思路 |
 
 ## 小结
 

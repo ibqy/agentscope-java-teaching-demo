@@ -1,5 +1,9 @@
 # Demo06：多智能体协作
 
+> **导航**：[← 上一篇：Demo05 工具调用](./05-tool-calling.md) · [返回首页](./index.md) · [下一篇：Demo07 记忆与工作区 →](./07-memory-workspace.md)
+>
+> **本章源码**：[Demo06SubagentController](../src/main/java/com/xb/agentscope/controller/demo06/Demo06SubagentController.java)
+
 ## 知识点
 
 - `SubagentDeclaration` 声明子智能体
